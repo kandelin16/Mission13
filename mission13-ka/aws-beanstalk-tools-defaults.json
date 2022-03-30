@@ -1,0 +1,20 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Debug",
+    "framework"     : "net5.0",
+    "self-contained" : false,
+    "application"    : "Mission13",
+    "environment"    : "kyleAMission13",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-09b5d857c952b068f\";\"aws:ec2:vpc,Subnets\"=\"subnet-04c82d67251c5de80\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.2.11 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "kyleamission13",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "personalEC2Key",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}

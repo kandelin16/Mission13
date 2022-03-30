@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    @foreach (var b in ViewBag.bowlers) 
+    {
+        <div>@b.BowlerFirstName</div>
+    }
+</div>

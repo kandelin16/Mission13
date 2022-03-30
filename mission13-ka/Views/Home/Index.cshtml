@@ -3,33 +3,128 @@
 }
 
 <div class="text-center">
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>Bowler First Name</th>
-                <th>Bowler Middle Initial</th>
-                <th>Bowler Last Name</th>
-                <th>Bowler Address</th>
-                <th>Bowler City</th>
-                <th>Bowler State</th>
-                <th>Bowler Zip</th>
-                <th>Bowler Phone</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var b in ViewBag.bowlers)
+    <div class="row">
+        <div class="col-10">
+            <h1>Bowlers</h1>
+            @if (ViewBag.selectedTeam.TeamName != "")
             {
-                <tr>
-                    <td>@b.BowlerFirstName</td>
-                    <td>@b.BowlerMiddleInit</td>
-                    <td>@b.BowlerLastName</td>
-                    <td>@b.BowlerAddress</td>
-                    <td>@b.BowlerCity</td>
-                    <td>@b.BowlerState</td>
-                    <td>@b.BowlerZip</td>
-                    <td>@b.BowlerPhoneNumber</td>
-                </tr>
+                <h2>@ViewBag.selectedTeam.TeamName</h2>
+                <a asp-action="Index" asp-controller="Home">Go Home</a>
             }
-        </tbody>
-    </table>
+            <div class="table-holder">
+            <table class="table table-striped-custom table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Bowler First Name</th>
+                        <th>Bowler Middle Initial</th>
+                        <th>Bowler Last Name</th>
+                        <th>Bowler Address</th>
+                        <th>Bowler City</th>
+                        <th>Bowler State</th>
+                        <th>Bowler Zip</th>
+                        <th>Bowler Phone</th>
+                        <th>Edit/Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var b in ViewBag.bowlers)
+                    {
+                        <tr>
+                            <td>@b.BowlerFirstName</td>
+                            <td>@b.BowlerMiddleInit</td>
+                            <td>@b.BowlerLastName</td>
+                            <td>@b.BowlerAddress</td>
+                            <td>@b.BowlerCity</td>
+                            <td>@b.BowlerState</td>
+                            <td>@b.BowlerZip</td>
+                            <td>@b.BowlerPhoneNumber</td>
+                            <td><button onclick="expandRow(@b.BowlerID);">Edit</button>
+                                <form asp-controller="Home" asp-action="DeleteBowler">
+                                <input type="hidden" value="@b.BowlerID" name="ID"/><button type="submit">❌</button></form>
+                            </td>
+                        </tr>
+                        <tr hidden id="hiddenRow@(b.BowlerID)">
+                            <td colspan=9>
+                                <h3>Edit Bowler</h3>
+                                <form id="bowlerUpdateForm@(b.BowlerID)" asp-controller="Home" asp-action="UpdateBowler" method="post" class="edit-form-flex-holder">
+                                    <div>
+                                        <input type="hidden" name="id" value="@b.BowlerID"/>
+                                        <label>First Name</label>
+                                        <input type="text" value="@b.BowlerFirstName" name="firstName"/>
+                                        <label>Middle Initial</label>
+                                        <input type="text" value="@b.BowlerMiddleInit" name="middleInit"/>
+                                        <label>Last Name</label>
+                                        <input type="text" value="@b.BowlerLastName" name="lastName"/>
+                                    </div>
+                                    <div>
+                                        <label>Address</label>
+                                        <input type="text" value="@b.BowlerAddress" name="address"/>
+                                        <label>City</label>
+                                        <input type="text" value="@b.BowlerCity" name="city"/>
+                                        <label>State</label>
+                                        <input type="text" value="@b.BowlerState" name="state"/>
+                                    </div>
+                                    <div>
+                                        <label>Zip</label>
+                                        <input type="number" value="@b.BowlerZip" max-length="5" pattern="[0-9]" name="zip"/>
+                                        <label>Phone Number</label>
+                                        <input type="text" value="@b.BowlerPhoneNumber" name="phone"/>
+                                    </div>
+                                </form>
+                                <div>
+                                    <button onclick="collapseRow(@b.BowlerID);">Cancel</button>
+                                    <button onclick="submitUpdateForm(@b.BowlerID);">Submit Changes</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>    
+        </div>
+        <div class="col-2">
+            <h2>Select a Team</h2>
+            <form asp-controller="Home" asp-action="Index">
+                <select name="teamID">
+                    <option selected >Select a Team</option>
+                    @foreach (var team in ViewBag.teams)
+                    {
+                        if (team.TeamID == ViewBag.selectedTeam.TeamID)
+                        {
+                              <option selected value="@team.TeamID">@team.TeamName</option>
+                        }
+                        else
+                        {
+                            <option value="@team.TeamID">@team.TeamName</option>
+                        }              
+                    }
+                </select>
+                <input type="submit" value="Submit" />
+            </form>
+            <button class="btn btn-primary" onclick="revealBowlerForm();" style="margin-top:1rem;margin-bottom:1rem;">Add A New Bowler</button>
+            <form asp-controller="Home" asp-action="AddBowler" hidden id="bowlerForm">
+                    <input type="hidden" name="id">
+                    <input type="text" name="firstName" placeholder="First Name"/>
+                    <input type="text" name="middleInit" placeholder="Middle Initial"/>
+                    <input type="text" name="lastName" placeholder="Last Name"/>
+                    <input type="text" name="address" placeholder="Address"/>
+                    <input type="text" name="city" placeholder="City"/>
+                    <input type="text" name="state" placeholder="State"/>
+                    <input type="number" max-length="5" pattern="[0-9]" name="zip" placeholder="Zip"/>
+                    <input type="text" name="phone" placeholder="Phone"/>
+                    <select name="team" placeholder="Team">
+                        <option selected>Select a Team</option>
+                        @foreach (var team in ViewBag.teams)
+                        {
+                            <option value="@team.TeamID">@team.TeamName</option>
+                        }
+                    </select>
+                <input type="submit" value="Submit New Bowler" class="btn btn-primary" style="margin-top:1rem;"/>
+                <button type="button" class="btn btn-secondary" onclick="hideBowlerForm();">Cancel</button>
+            </form>
+        </div>
+    </div>
+    <div class="add-holder">
+
+    </div>
 </div>

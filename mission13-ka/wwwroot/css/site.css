@@ -69,3 +69,27 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+.edit-form-flex-holder {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.edit-form-flex-holder div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.table-striped-custom tr:nth-child(4n+1) {
+    background-color: #f2f2f2;
+}
+
+.table-holder {
+    overflow-x: auto;
+    max-height: 600px;
+    margin-top: 1rem;
+}
+
+.add-holder {
+    margin-top: 1rem;
+}

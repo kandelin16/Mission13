@@ -29,6 +29,7 @@ namespace mission13_ka
             services.AddDbContext<BowlingDBContext>( options => {
                 options.UseMySql(Configuration.GetConnectionString("BowlingDB"));
             });
+            Settings.ConnectionString = Configuration.GetConnectionString("BowlingDB");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
